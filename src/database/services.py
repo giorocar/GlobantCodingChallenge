@@ -1,13 +1,8 @@
 import redshift_connector
 import pandas as pd
-from settings import settings
-import os
+from security.AWSSecretManager import get_secret_database
 
-creds = {'host': settings["host_db"],
-         'database': settings["database"],
-         'user': settings["user_db"],
-         'password': "GlobantTest123" #os.getenv("password_db")
-         }
+creds = get_secret_database()
 
 
 def get_conn():
