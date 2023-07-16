@@ -1,6 +1,6 @@
 import redshift_connector
 import pandas as pd
-from security.AWSSecretManager import get_secret_database
+from src.security.AWSSecretManager import get_secret_database
 
 creds = get_secret_database()
 

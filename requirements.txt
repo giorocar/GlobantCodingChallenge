@@ -1,0 +1,5 @@
+gunicorn==20.1.0
+flask
+redshift-connector==2.0.913
+pandas==1.5.2
+boto3
