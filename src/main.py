@@ -3,6 +3,7 @@ import re
 from dict.tables import tables_dict
 import pandas as pd
 from database.services import upload_df_to_database, get_metric
+from data_quality.data_quality import generate_filter_codes
 
 
 app = Flask(__name__)
@@ -15,13 +16,13 @@ def init():
     return "<p>Hello, Welcome to My Globant's Coding challenge!</p>"
 
 
-@app.route('/uploadFile')
+# @app.route('/uploadFile')
+# def uploadFile():
+#     return render_template("uploadFile.html")
+
+
+@app.route('/uploadFile', methods=['POST'])
 def uploadFile():
-    return render_template("uploadFile.html")
-
-
-@app.route('/success', methods=['POST'])
-def answerUploadFile():
     if request.method == 'POST':
         f = request.files['file']
 
@@ -42,19 +43,56 @@ def answerUploadFile():
                      t: 'str' for t in tcolumns})
 
     nrows = len(df.index)
-    print("numero de registros: ", nrows)
+
+    content_response = {'file': f.filename,
+                        'type': fileType,
+                        'columns': tcolumns,
+                        'rows': nrows}
+
     if nrows < 1 or nrows > 1000:
         return jsonify(status_code=405,
                        content={'error':
                                 'The number of lines should be between 1 and 1000'})
 
-    upload_df_to_database(df, fileType)
+    codeline = generate_filter_codes(df, fileType)
+    loc = {'df': df}
+    exec(codeline, globals(), loc)
 
-    return render_template("answerUploadFile.html",
-                           name=f.filename,
-                           type=fileType,
-                           columns=tcolumns,
-                           rows=nrows)
+    df_ok = loc['df_ok']
+    df_failed = loc['df_failed']
+    upload_df_to_database(df_ok, fileType)
+    ok_inserts = len(df_ok.index)
+    fail_rows = len(df_failed.index)
+
+    if fail_rows == 0:
+        content_response['result'] = 'All the records have been uploaded'
+        content_response['nrows_inserted'] = ok_inserts
+    else:
+        content_response[
+            'result'] = f'Errors founded on records failed, successfully uploaded {ok_inserts} registers'
+        if ok_inserts > 0:
+            content_response['nrows_inserted'] = ok_inserts
+        df_failed = df_failed.fillna('').to_dict(orient="records")
+        content_response['rows_failed'] = df_failed
+        content_response['nrows_failed'] = fail_rows
+
+    return jsonify(status_code=200, content=content_response)
+
+
+@app.route('/metrics')
+def metrics():
+
+    query_input = request.args.get('query')
+    query_type = ['num_emp_hired_x_job_dpto',
+                  'list_emp_hired_x_dpto']
+    if query_input not in query_type:
+        return jsonify(status_code=405,
+                       content={'error': f'The query {query_input} is not available'})
+    try:
+        results = get_metric(query_input)
+        return jsonify(status_code=200, content=results)
+    except Exception as e:
+        return e
 
 
 if __name__ == '__main__':
