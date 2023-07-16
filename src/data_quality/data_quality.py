@@ -1,4 +1,4 @@
-from dict.tables import tables_dict
+from src.dict.tables import tables_dict
 
 
 def generate_filter_codes(df, ttype):

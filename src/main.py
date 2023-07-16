@@ -1,9 +1,9 @@
 from flask import Flask, jsonify, request, render_template, redirect, flash
 import re
-from dict.tables import tables_dict
+from src.dict.tables import tables_dict
 import pandas as pd
-from database.services import upload_df_to_database, get_metric
-from data_quality.data_quality import generate_filter_codes
+from src.database.services import upload_df_to_database, get_metric
+from src.data_quality.data_quality import generate_filter_codes
 
 
 app = Flask(__name__)
@@ -79,7 +79,7 @@ def uploadFile():
     return jsonify(status_code=200, content=content_response)
 
 
-@app.route('/metrics')
+@app.route('/metrics', methods=['GET'])
 def metrics():
 
     query_input = request.args.get('query')
