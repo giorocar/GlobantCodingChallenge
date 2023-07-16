@@ -1,15 +1,16 @@
 import boto3
 from botocore.exceptions import ClientError
 import json
+import os
 
-AWS_ACCESS_KEY = "AKIA4FBMJACIS3JKVZ7I"
-AWS_SECRET_KEY = "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"
+AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
+AWS_SECRET_KEY = os.getenv("AWS_SECRET_KEY")
 AWS_REGION_NAME = "us-east-1"
 
 
 def get_secret_database():
 
-    secret_name = "sqlworkbench!114a4537-dad3-4b14-a714-304ed2d46cb0"
+    secret_name = "my-secrets-coding-challenge"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
