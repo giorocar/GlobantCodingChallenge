@@ -8,12 +8,14 @@ Technical test for Data Engineer role in Globant
 
 ## Architecture Diagram
 
-![alt text](https://raw.githubusercontent.com/giorocar/GlobantCodingChallenge/docs/images/diagram_app.png)
+![alt text](https://github.com/giorocar/GlobantCodingChallenge/blob/main/images/diagram_app.png?raw=true)
 
 To resolve the challenge was used this stack
 
 API REST: Flask Api a popular python framework used in api creation.
+
 DATABASE: the database used is AWS Redshift Warehouse service, according to the challenge these need to support big data, so for me these is appropriate in order to take advantage of their scalability, flexibility and compatibility.
+
 ENDPOINTS: The API REST is developed with Python, Flask API which have 2 endpoints to use
 uploadFile/ to upload the data Challenge 1.
 metrics/ to show insights Challenge 2
