@@ -8,7 +8,7 @@ Technical test for Data Engineer role in Globant
 
 ## Diagram
 
-![alt text](https://github.com/giorocar/GlobantCodingChallenge/images/diagram_app.png)
+![alt text](https://raw.githubusercontent.com/giorocar/GlobantCodingChallenge/docs/images/diagram_app.png)
 ## Repositorio Estructura
 
 ```
